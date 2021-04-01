@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input id="otp" class="form-control" type="text" readonly="">
+                    <button onclick="generatePin()" class="generate-btn" id="generate-btn" >Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input id="otp-input" class="form-control" type="text" readonly="">
+                    <div class="numbers">
+                        <div class="calc-body">
+                            <div class="calc-button-row">
+                              <div class="button" onclick="inputNumber(7)">7</div>
+                              <div class="button" onclick="inputNumber(8)">8</div>
+                              <div class="button" onclick="inputNumber(9)">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button" onclick="inputNumber(4)">4</div>
+                              <div class="button" onclick="inputNumber(5)">5</div>
+                              <div class="button" onclick="inputNumber(6)">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div class="button" onclick="inputNumber(1)">1</div>
+                              <div class="button" onclick="inputNumber(2)">2</div>
+                              <div class="button" onclick="inputNumber(3)">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button" onclick="deleteNumber()"><</div>
+                                <div class="button" onclick="inputNumber(0)">0</div>
+                                <div class="button" onclick="clearNumber()">C</div>
+                            </div>
+                            <div>
+                                <button id="submit" onclick="submitOTP()" type="submit" class="submit-btn">Submit</button>
+                                <p id="submit-msg" class="action-left"><span id="try-count">3</span> try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notify-section" id="notify-msg">
+            <p class="notify" id="wrong-input">❌ Pin Didn't Match, Please try again</p>
+            <p class="notify" id="right-input">✅ Pin Matched... Secret door is opening for you</p>
+        </div>
+    </div>
+
+    <script>
+
+        // generate pin btn event handler
+
+        function generatePin(){
+            var num = "1234567890";
+            var OTP = "";
+
+            for(var i=0; i<4; i++){
+                OTP += num[Math.floor(Math.random()*10)];
+            }
+            document.getElementById("otp").value = OTP;
+        }
+
+        // key pad event handler
+
+        let OTPinput = document.getElementById("otp-input");
+
+        function inputNumber (number){
+            OTPinput.value = OTPinput.value + number;
+        }
+
+        function clearNumber (){
+            OTPinput.value = "";
+        }
+
+        function deleteNumber(){
+            let presentValue = document.getElementById("otp-input").value;
+            if(presentValue!=""){
+                document.getElementById("otp-input").value = presentValue.slice(0,-1);
+            }
+        }
+
+        // otp check event handler
+
+        function submitOTP (){
+            let inputValue = document.getElementById("otp-input").value;
+            let OTP = document.getElementById("otp").value;
+            let wrongInput = document.getElementById("wrong-input");
+            let rightInput = document.getElementById("right-input");
+            if(inputValue==OTP){
+                wrongInput.style.display = "none";
+                rightInput.style.display = "block";
+            }
+            if(inputValue!==OTP){
+                wrongInput.style.display = "block";
+                rightInput.style.display = "none";
+
+                let tryCount = document.getElementById("try-count");
+                tryCount.innerText = tryCount.innerText-1;
+
+                if(parseFloat(tryCount.innerText)==0){
+                    document.getElementById("submit").style.display = "none";
+                    document.getElementById("submit-msg").innerText = "Please try again later"
+                    document.getElementById("notify-msg").style.display = "none";
+                }
+            }
+
+        }
+        
+    </script>
+</body>
+</html>
